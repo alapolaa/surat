@@ -2,10 +2,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
-require '../config/config.php'; // Pastikan file koneksi benar
+require '../config/config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_pengguna = 1; // Gantilah dengan ID pengguna yang sesuai (bisa dari sesi login)
+    $id_pengguna = 1;
     $jenis_surat = $_POST['jenis_surat'];
     $nama_lengkap = $_POST['nama_lengkap'];
     $tempat_lahir = $_POST['tempat_lahir'];
@@ -18,9 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $status_pernikahan = isset($_POST['status_pernikahan']) ? $_POST['status_pernikahan'] : null;
     $jenis_usaha = isset($_POST['jenis_usaha']) ? $_POST['jenis_usaha'] : null;
     $status_tanah = isset($_POST['status_tanah']) ? $_POST['status_tanah'] : null;
-    $file_pendukung = null; // Implementasi upload file bisa ditambahkan
+    $file_pendukung = null;
 
-    // 1. Insert ke tabel pengajuan_surat
+
     $query1 = "INSERT INTO pengajuan_surat (id_pengguna, jenis_surat) VALUES (?, ?)";
     $stmt1 = $conn->prepare($query1);
     $stmt1->bind_param("is", $id_pengguna, $jenis_surat);
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt1->execute()) {
         $id_pengajuan = $conn->insert_id;
 
-        // 2. Insert ke tabel detail_surat
+
         $query2 = "INSERT INTO detail_surat 
             (id_pengajuan, nama_lengkap, tempat_lahir, tanggal_lahir, nik, alamat, agama, pekerjaan, keperluan, status_pernikahan, jenis_usaha, status_tanah, file_pendukung) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

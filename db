@@ -17,6 +17,15 @@ CREATE TABLE pengajuan_surat (
     tanggal_selesai TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (id_pengguna) REFERENCES pengguna(id) ON DELETE CASCADE
 );
+
+CREATE TABLE perangkat_desa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+
 CREATE TABLE detail_surat (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_pengajuan INT NOT NULL,
@@ -31,12 +40,14 @@ CREATE TABLE detail_surat (
     status_pernikahan ENUM('Belum Menikah', 'Menikah', 'Duda', 'Janda') NULL,
     jenis_usaha VARCHAR(255) NULL, -- Khusus Surat Usaha
     status_tanah VARCHAR(255) NULL, -- Khusus Surat Tanah
+    luas_tanah DECIMAL(10,2) NULL, -- Tambahan untuk luas tanah
+    letak_tanah TEXT NULL, -- Lokasi tanah
+    status_kepemilikan ENUM('Pribadi', 'Warisan', 'Hak Guna', 'Sewa') NULL, -- Jenis kepemilikan tanah
+    bukti_kepemilikan VARCHAR(255) NULL, -- File sertifikat atau bukti lainnya
+    batas_utara VARCHAR(255) NULL, -- Batas tanah sebelah utara
+    batas_selatan VARCHAR(255) NULL, -- Batas tanah sebelah selatan
+    batas_timur VARCHAR(255) NULL, -- Batas tanah sebelah timur
+    batas_barat VARCHAR(255) NULL, -- Batas tanah sebelah barat
     file_pendukung VARCHAR(255) NULL, -- File seperti KTP/KK
     FOREIGN KEY (id_pengajuan) REFERENCES pengajuan_surat(id) ON DELETE CASCADE
-);
-CREATE TABLE perangkat_desa (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nama VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
 );
