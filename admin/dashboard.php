@@ -89,31 +89,31 @@ $total_diambil = $conn->query("SELECT COUNT(*) as total FROM pengajuan_surat WHE
                             <?php if ($row['status'] == 'Menunggu Verifikasi') { ?>
                                 <a href="verifikasi.php?id=<?= $row['id']; ?>" class="btn btn-success btn-sm">Verifikasi</a>
                                 <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tolakModal<?= $row['id']; ?>">Tolak</a>
-
-                                <div class="modal fade" id="tolakModal<?= $row['id']; ?>" tabindex="-1" aria-labelledby="tolakModalLabel<?= $row['id']; ?>" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="tolakModalLabel<?= $row['id']; ?>">Alasan Penolakan</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form method="POST" action="tolak.php?id=<?= $row['id']; ?>">
-                                                    <div class="mb-3">
-                                                        <label for="alasan_penolakan" class="form-label">Alasan Penolakan</label>
-                                                        <textarea class="form-control" id="alasan_penolakan" name="alasan_penolakan" rows="3" required></textarea>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-danger">Tolak</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                             <?php } elseif ($row['status'] == 'Diproses') { ?>
-                                <a href="../cetak/cetak_surat.php" class="btn btn-primary btn-sm" id="cetakBtn">Cetak</a>
+                                <?php
+                                $cetak_link = '';
+                                switch ($row['jenis_surat']) {
+                                    case 'Domisili':
+                                        $cetak_link = '../cetak/cetak_domisili.php?id=' . $row['id'];
+                                        break;
+                                    case 'Tidak Mampu':
+                                        $cetak_link = '../cetak/cetak_sktm.php?id=' . $row['id'];
+                                        break;
+                                    case 'Usaha':
+                                        $cetak_link = '../cetak/cetak_usaha.php?id=' . $row['id'];
+                                        break;
+                                    case 'Belum Menikah':
+                                        $cetak_link = '../cetak/cetak_belum_menikah.php?id=' . $row['id'];
+                                        break;
+                                    case 'Tanah':
+                                        $cetak_link = '../cetak/cetak_tanah.php?id=' . $row['id'];
+                                        break;
+                                    default:
+                                        $cetak_link = '#'; // Atau template default
+                                }
+                                ?>
+                                <a href="<?= $cetak_link; ?>" class="btn btn-primary btn-sm" id="cetakBtn">Cetak</a>
                                 <a href="siap_diambil.php?id=<?= $row['id']; ?>" class="btn btn-primary btn-sm" id="sudahCetakBtn" style="display: none;">Sudah Cetak</a>
-
                             <?php } else { ?>
                                 <button class="btn btn-secondary btn-sm" disabled><?= $row['status']; ?></button>
                             <?php } ?>
