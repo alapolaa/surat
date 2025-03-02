@@ -64,8 +64,9 @@ $result = $conn->query("SELECT ps.*, p.nama FROM pengajuan_surat ps JOIN penggun
                                 </div>
 
                             <?php } elseif ($row['status'] == 'Diproses') { ?>
-                                <a href="../cetak/cetak_surat.php" class="btn btn-primary btn-sm">Cetak</a>
-                                <a href="siap_diambil.php?id=<?= $row['id']; ?>" class="btn btn-primary btn-sm">Sudah Cetak</a>
+                                <a href="../cetak/cetak_surat.php" class="btn btn-primary btn-sm" id="cetakBtn">Cetak</a>
+                                <a href="siap_diambil.php?id=<?= $row['id']; ?>" class="btn btn-primary btn-sm" id="sudahCetakBtn" style="display: none;">Sudah Cetak</a>
+
                             <?php } else { ?>
                                 <button class="btn btn-secondary btn-sm" disabled><?= $row['status']; ?></button>
                             <?php } ?>
@@ -76,7 +77,12 @@ $result = $conn->query("SELECT ps.*, p.nama FROM pengajuan_surat ps JOIN penggun
         </table>
     </div>
     <a href="../login.php" class="btn btn-danger">Logout</a>
-
+    <script>
+        document.getElementById('cetakBtn').addEventListener('click', function() {
+            document.getElementById('cetakBtn').style.display = 'none';
+            document.getElementById('sudahCetakBtn').style.display = 'inline-block';
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
