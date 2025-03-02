@@ -64,7 +64,8 @@ $result = $conn->query("SELECT ps.*, p.nama FROM pengajuan_surat ps JOIN penggun
                                 </div>
 
                             <?php } elseif ($row['status'] == 'Diproses') { ?>
-                                <a href="siap_diambil.php?id=<?= $row['id']; ?>" class="btn btn-primary btn-sm">Siap Diambil</a>
+                                <a href="../cetak/cetak_surat.php" class="btn btn-primary btn-sm">Cetak</a>
+                                <a href="siap_diambil.php?id=<?= $row['id']; ?>" class="btn btn-primary btn-sm">Sudah Cetak</a>
                             <?php } else { ?>
                                 <button class="btn btn-secondary btn-sm" disabled><?= $row['status']; ?></button>
                             <?php } ?>
