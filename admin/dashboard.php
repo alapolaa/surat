@@ -1,6 +1,14 @@
 <?php
 include '../config/config.php';
+
+// Query untuk daftar pengajuan surat
 $result = $conn->query("SELECT ps.*, p.nama FROM pengajuan_surat ps JOIN pengguna p ON ps.id_pengguna = p.id ORDER BY ps.tanggal_pengajuan DESC");
+
+// Query untuk menghitung jumlah surat berdasarkan status
+$total_masuk = $conn->query("SELECT COUNT(*) as total FROM pengajuan_surat")->fetch_assoc()['total'];
+$total_ditolak = $conn->query("SELECT COUNT(*) as total FROM pengajuan_surat WHERE status = 'Ditolak'")->fetch_assoc()['total'];
+$total_diproses = $conn->query("SELECT COUNT(*) as total FROM pengajuan_surat WHERE status = 'Diproses'")->fetch_assoc()['total'];
+$total_diambil = $conn->query("SELECT COUNT(*) as total FROM pengajuan_surat WHERE status = 'Siap Diambil'")->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +22,45 @@ $result = $conn->query("SELECT ps.*, p.nama FROM pengajuan_surat ps JOIN penggun
 <body>
     <div class="container mt-4">
         <h2>Daftar Pengajuan Surat</h2>
+
+        <div class="mt-4">
+            <h3>History</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Masuk</h5>
+                            <p class="card-text"><?= $total_masuk; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Ditolak</h5>
+                            <p class="card-text"><?= $total_ditolak; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Diproses</h5>
+                            <p class="card-text"><?= $total_diproses; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Diambil</h5>
+                            <p class="card-text"><?= $total_diambil; ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <table class="table">
             <thead>
                 <tr>
