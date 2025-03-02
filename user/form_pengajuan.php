@@ -40,6 +40,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    // Upload File Pendukung (KTP/KK)
+    $file_pendukung = null;
+    if (isset($_FILES['file_pendukung']) && $_FILES['file_pendukung']['error'] == 0) {
+        $upload_dir = '../uploads/';
+        $filename = time() . '_' . basename($_FILES['file_pendukung']['name']);
+        $upload_file = $upload_dir . $filename;
+
+        if (move_uploaded_file($_FILES['file_pendukung']['tmp_name'], $upload_file)) {
+            $file_pendukung = $filename;
+        }
+    }
+
     // Insert ke `pengajuan_surat`
     $query1 = "INSERT INTO pengajuan_surat (id_pengguna, jenis_surat) VALUES (?, ?)";
     $stmt1 = $conn->prepare($query1);
@@ -50,12 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Insert ke `detail_surat`
         $query2 = "INSERT INTO detail_surat 
-            (id_pengajuan, nama_lengkap, tempat_lahir, tanggal_lahir, nik, alamat, agama, pekerjaan, keperluan, status_pernikahan, jenis_usaha, 
-             status_tanah, luas_tanah, letak_tanah, status_kepemilikan, bukti_kepemilikan, batas_utara, batas_selatan, batas_timur, batas_barat) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    (id_pengajuan, nama_lengkap, tempat_lahir, tanggal_lahir, nik, alamat, agama, pekerjaan, keperluan, status_pernikahan, jenis_usaha, 
+                    status_tanah, luas_tanah, letak_tanah, status_kepemilikan, bukti_kepemilikan, batas_utara, batas_selatan, batas_timur, batas_barat, file_pendukung) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt2 = $conn->prepare($query2);
         $stmt2->bind_param(
-            "isssssssssssdsssssss",
+            "isssssssssssdssssssss",
             $id_pengajuan,
             $nama_lengkap,
             $tempat_lahir,
@@ -75,7 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $batas_utara,
             $batas_selatan,
             $batas_timur,
-            $batas_barat
+            $batas_barat,
+            $file_pendukung // Tambahkan file_pendukung di sini
         );
 
         if ($stmt2->execute()) {
@@ -111,31 +124,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 html += `<label>Agama</label><input type="text" name="agama" class="form-control" required>`;
                 html += `<label>Pekerjaan</label><input type="text" name="pekerjaan" class="form-control">`;
                 html += `<label>Keperluan</label><textarea name="keperluan" class="form-control" required></textarea>`;
+                html += `<label>File Pendukung (KTP/KK)</label><input type="file" name="file_pendukung" class="form-control">`;
 
                 if (jenisSurat === "Belum Menikah") {
                     html += `<label>Status Pernikahan</label>
-                            <select name="status_pernikahan" class="form-control">
-                                <option value="Belum Menikah">Belum Menikah</option>
-                                <option value="Menikah">Menikah</option>
-                            </select>`;
+                                <select name="status_pernikahan" class="form-control">
+                                    <option value="Belum Menikah">Belum Menikah</option>
+                                    <option value="Menikah">Menikah</option>
+                                </select>`;
                 }
 
                 if (jenisSurat === "Usaha") {
                     html += `<label>Jenis Usaha</label><input type="text" name="jenis_usaha" class="form-control" required>`;
                 }
-
                 if (jenisSurat === "Tanah") {
                     html += `<label>Status Tanah</label><input type="text" name="status_tanah" class="form-control" required>`;
                     html += `<label>Luas Tanah (m²)</label><input type="number" name="luas_tanah" class="form-control" required>`;
                     html += `<label>Letak Tanah</label><textarea name="letak_tanah" class="form-control" required></textarea>`;
                     html += `<label>Status Kepemilikan</label>
-                            <select name="status_kepemilikan" class="form-control">
-                                <option value="Pribadi">Pribadi</option>
-                                <option value="Warisan">Warisan</option>
-                                <option value="Hak Guna">Hak Guna</option>
-                                <option value="Sewa">Sewa</option>
-                            </select>`;
+                                <select name="status_kepemilikan" class="form-control">
+                                    <option value="Pribadi">Pribadi</option>
+                                    <option value="Warisan">Warisan</option>
+                                    <option value="Hak Guna">Hak Guna</option>
+                                    <option value="Sewa">Sewa</option>
+                                </select>`;
                     html += `<label>Bukti Kepemilikan</label><input type="file" name="bukti_kepemilikan" class="form-control">`;
+                    html += `<label>Batas Utara</label><input type="text" name="batas_utara" class="form-control">`;
+                    html += `<label>Batas Selatan</label><input type="text" name="batas_selatan" class="form-control">`;
+                    html += `<label>Batas Timur</label><input type="text" name="batas_timur" class="form-control">`;
+                    html += `<label>Batas Barat</label><input type="text" name="batas_barat" class="form-control">`;
                 }
             }
             formFields.innerHTML = html;
@@ -146,7 +163,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container mt-5">
         <h2>Form Pengajuan Surat</h2>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <label>Pilih Jenis Surat</label>
             <select name="jenis_surat" id="jenis_surat" class="form-control" onchange="showForm()" required>
                 <option value="">-- Pilih --</option>
