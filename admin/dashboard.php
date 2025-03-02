@@ -38,6 +38,7 @@ $result = $conn->query("SELECT ps.*, p.nama FROM pengajuan_surat ps JOIN penggun
                         <td><?= $row['tanggal_pengajuan']; ?></td>
                         <td><?= $row['tanggal_selesai'] ? $row['tanggal_selesai'] : '-'; ?></td>
                         <td>
+                            <a href="detail_pengajuan.php?id=<?= $row['id']; ?>" class="btn btn-info btn-sm">Detail</a>
                             <?php if ($row['status'] == 'Menunggu Verifikasi') { ?>
                                 <a href="verifikasi.php?id=<?= $row['id']; ?>" class="btn btn-success btn-sm">Verifikasi</a>
                                 <a href="tolak.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm">Tolak</a>
@@ -52,6 +53,7 @@ $result = $conn->query("SELECT ps.*, p.nama FROM pengajuan_surat ps JOIN penggun
             </tbody>
         </table>
     </div>
+    <a href="../login.php" class="btn btn-danger">Logout</a>
 </body>
 
 </html>
