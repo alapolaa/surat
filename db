@@ -17,6 +17,7 @@ CREATE TABLE pengajuan_surat (
     tanggal_selesai TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (id_pengguna) REFERENCES pengguna(id) ON DELETE CASCADE
 );
+ALTER TABLE pengajuan_surat ADD alasan_penolakan TEXT NULL;
 
 CREATE TABLE perangkat_desa (
     id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,17 +1,22 @@
 <?php
 include '../config/config.php';
 
-if (isset($_GET['id'])) {
-    $id_pengajuan = $_GET['id'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $alasan_penolakan = $_POST['alasan_penolakan'];
 
-    // Update status menjadi 'Ditolak'
-    $query = "UPDATE pengajuan_surat SET status = 'Ditolak' WHERE id = $id_pengajuan";
+    // Update status pengajuan menjadi "Ditolak"
+    $sql = "UPDATE pengajuan_surat SET status = 'Ditolak', alasan_penolakan = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("si", $alasan_penolakan, $id);
 
-    if ($conn->query($query) === TRUE) {
-        echo "<script>alert('Pengajuan surat ditolak!'); window.location.href='dashboard.php';</script>";
+    if ($stmt->execute()) {
+        echo "<script>alert('Pengajuan surat berhasil ditolak.'); window.location='dashboard.php';</script>";
     } else {
-        echo "Gagal memperbarui status: " . $conn->error;
+        echo "Error: " . $stmt->error;
     }
 } else {
-    echo "ID tidak ditemukan!";
+    echo "Akses tidak sah.";
 }
+
+$conn->close();

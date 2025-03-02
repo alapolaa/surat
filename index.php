@@ -43,6 +43,7 @@ $result_surat = $conn->query($query_surat);
                     <th>Status</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Tanggal Selesai</th>
+                    <th>Alasan Penolakan</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,6 +57,7 @@ $result_surat = $conn->query($query_surat);
                         </td>
                         <td><?= $row['tanggal_pengajuan']; ?></td>
                         <td><?= $row['tanggal_selesai'] ? $row['tanggal_selesai'] : '-'; ?></td>
+                        <td><?= ($row['status'] == 'Ditolak' && $row['alasan_penolakan']) ? $row['alasan_penolakan'] : '-'; ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -64,7 +66,6 @@ $result_surat = $conn->query($query_surat);
 
     <div class="container mt-4">
         <a href="user/form_pengajuan.php" class="btn btn-primary">Ajukan Surat Baru</a>
-        <!-- <a href="user/profile.php" class="btn btn-danger">Profile</a> -->
         <a href="login.php" class="btn btn-danger">Logout</a>
     </div>
 </body>
