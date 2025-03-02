@@ -3,7 +3,12 @@ include '../config/config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET['id'])) {
     $id = $_GET['id'];
-    $alasan_penolakan = $_POST['alasan_penolakan'];
+    $alasan_penolakan = trim($_POST['alasan_penolakan']);
+
+    if (empty($alasan_penolakan)) {
+        echo "<script>alert('Alasan penolakan harus diisi!'); window.history.back();</script>";
+        exit;
+    }
 
     // Update status pengajuan menjadi "Ditolak"
     $sql = "UPDATE pengajuan_surat SET status = 'Ditolak', alasan_penolakan = ? WHERE id = ?";

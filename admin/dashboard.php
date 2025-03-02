@@ -89,6 +89,26 @@ $total_diambil = $conn->query("SELECT COUNT(*) as total FROM pengajuan_surat WHE
                             <?php if ($row['status'] == 'Menunggu Verifikasi') { ?>
                                 <a href="verifikasi.php?id=<?= $row['id']; ?>" class="btn btn-success btn-sm">Verifikasi</a>
                                 <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tolakModal<?= $row['id']; ?>">Tolak</a>
+
+                                <div class="modal fade" id="tolakModal<?= $row['id']; ?>" tabindex="-1" aria-labelledby="tolakModalLabel<?= $row['id']; ?>" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="tolakModalLabel<?= $row['id']; ?>">Alasan Penolakan</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="tolak.php?id=<?= $row['id']; ?>" method="POST">
+                                                    <div class="mb-3">
+                                                        <label for="alasan_penolakan" class="form-label">Alasan Penolakan:</label>
+                                                        <textarea class="form-control" id="alasan_penolakan" name="alasan_penolakan" rows="3"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-danger">Tolak</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php } elseif ($row['status'] == 'Diproses') { ?>
                                 <?php
                                 $cetak_link = '';
